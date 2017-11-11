@@ -44,6 +44,48 @@ namespace FakeNews
         }
 
         /// <summary>
+        /// checks which words show with the searched word and how many times and sources
+        /// </summary>
+        /// <param name="list">list of articles</param>
+        /// <returns>words appearence and amout</returns>
+        public List<Frequency> checkArticles(List<Article> list)
+        {
+            List<Frequency> words = new List<Frequency>();
+            Frequency word;
+            List<string> data = new List<string>();
+
+            foreach (var item in list)
+            {
+                data = item
+                    .Title
+                    .Split(' ')
+                    .ToList()
+                    .Where(w=>w[0] >= 'A' && w[0] <= 'Z' && !w.ToLower().Contains(searchText.Text.ToLower()))
+                    .ToList();
+
+                foreach (var dataItem in data)
+                {
+                    if(words.Where(w=>w.Word.Equals(dataItem)).Count() == 0)
+                    {
+                        word = new Frequency(dataItem);
+                        words.Add(word);
+                    }
+                    words.SingleOrDefault(s => s.Word.Equals(dataItem)).Add(item.Source.Name, list.FindIndex(f=>f == item));
+                }
+
+            }
+
+            foreach (var item in words)
+            {
+                item.Percentage = Math.Round(item.Amount / (double)list.Count * 100);
+            }
+
+            words = words.OrderByDescending(o => o.Percentage).Where(w=>w.Percentage >=5).ToList();
+
+            return words;
+        }
+
+        /// <summary>
         /// windows form function
         /// </summary>
         public Form1()
@@ -59,9 +101,8 @@ namespace FakeNews
         private void Search_Click(object sender, EventArgs e)
         {
             List<Article> listArticle = getNews();
-            articleData.DataSource = listArticle;
-            articleData.Columns[3].Visible = false;
-            articleData.Columns[5].Visible = false;
+            List<Frequency> words = checkArticles(listArticle);
+            articleData.DataSource = words;
         }
     }
 }
