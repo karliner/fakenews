@@ -17,7 +17,7 @@ namespace FakeNews
         private string description;
         private string url;
         private string urlToImage;
-        private string publishedAt;
+        private DateTime? publishedAt;
 
         public Source Source { get => source; set => source = value; }
         public string Author { get => author; set => author = value; }
@@ -25,6 +25,6 @@ namespace FakeNews
         public string Description { get => description; set => description = value; }
         public string Url { get => url; set => url = value; }
         public string UrlToImage { get => urlToImage; set => urlToImage = value; }
-        public string PublishedAt { get => publishedAt; set => publishedAt = value; }
+        public DateTime? PublishedAt { get => publishedAt; set => publishedAt = value; }
     }
 }

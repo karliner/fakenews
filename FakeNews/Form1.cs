@@ -40,6 +40,7 @@ namespace FakeNews
                 JObject json = JObject.Parse(html);
                 filteredArticle = JsonConvert.DeserializeObject<List<Article>>(json.Last.ToString().Substring(11));
             }
+            filteredArticle = filteredArticle.OrderBy(o => o.PublishedAt).ToList();
             return filteredArticle;
         }
 
@@ -60,7 +61,7 @@ namespace FakeNews
                     .Title
                     .Split(' ')
                     .ToList()
-                    .Where(w=>w[0] >= 'A' && w[0] <= 'Z' && !w.ToLower().Contains(searchText.Text.ToLower()))
+                    .Where(w=>w.Length > 0 && w[0] >= 'A' && w[0] <= 'Z' && !w.ToLower().Contains(searchText.Text.ToLower()))
                     .ToList();
 
                 foreach (var dataItem in data)
